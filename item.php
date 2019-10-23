@@ -66,7 +66,7 @@
           <?php
           include "presentation/productP.php";
           $pp = new ProductP();
-          $pp->ShowProductByUser();
+          $pp->ShowItem();
           ?>
         </div>
       </div>

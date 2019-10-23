@@ -1,58 +1,109 @@
 <?php include "business/productB.php" ?>
 <?php include "business/inventoryB.php" ?>
+<?php include "business/productAnalysisB.php" ?>
 <?php
 class ProductP
 {
-  public function ShowFeaturedProduct()
-  {
-    $from = "2019-09-01";
-    $to = "2019-10-08";
-    $ib = new InventoryB();
-    $featuredList = $ib->GetPoorPerformanceList($from, $to);
+  private $from = "2019-09-01";
+  private $to = "2019-10-08";
 
-    foreach ($featuredList as $x => $x_value) {
-      $pb = new ProductB();
-      $result = $pb->GetProductsByID($x);
-      $row = mysqli_fetch_array($result);
-      $product = <<<DELIMITER
-      <div class="col-sm-4">
+  public function ShowItem()
+  {
+    // 1. Get product id
+    $product_id = $this->GetProduct();
+    // 2. Show single product
+    $pb = new ProductB();
+    $result = $pb->GetProductsByID($product_id);
+    $row = mysqli_fetch_array($result);
+    $name = $row['product_name'];
+    $price = $row['product_price'];
+    $this->ShowSingleProduct($name, $price);
+
+    // 3. Update view
+    $pad = new ProductAnalysisB();
+    $pad->UpdateViewOfProduct($product_id);
+  }
+
+  public function GetProduct()
+  {
+    if (!isset($_GET['product_id'])) {
+      $product_id = 0;
+    } else {
+      $product_id = $_GET['product_id'];
+    }
+    return $product_id;
+  }
+
+  public function ShowSingleProduct($name, $price)
+  {
+    $product = <<<DELIMITER
+      <div class="col-sm-12">
       <div class="card">
-      <img class="card-img-top" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22286%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20286%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_16da67aaf0c%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A14pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_16da67aaf0c%22%3E%3Crect%20width%3D%22286%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22107.1953125%22%20y%3D%2296.3%22%3E286x180%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" alt="Card image cap">
+      <img class="card-img-top" src="http://placehold.it/700x400" alt="Card image cap">
       <div class="card-body">
-        <h5 class="card-title">{$row['product_name']}</h5>
-        <p class="card-text">\${$row['product_price']}</p>
+        <h5 class="card-title">{$name}</h5>
+        <p class="card-text">\${$price}</p>
         <a href="#" class="btn btn-primary">Add to card</a>
       </div>
       </div>
       <br>
       </div>
       DELIMITER;
-      echo $product;
+    echo $product;
+  }
+
+  public function ShowProduct($name, $price, $id)
+  {
+    $product = <<<DELIMITER
+      <div class="col-sm-4">
+      <div class="card">
+      <a href="item.php?product_id={$id}">
+      <img class="card-img-top" src="http://placehold.it/700x400" alt="Card image cap">
+      </a>
+      <div class="card-body">
+        <h5 class="card-title">{$name}</h5>
+        <p class="card-text">\${$price}</p>
+        <a href="#" class="btn btn-primary">Add to card</a>
+      </div>
+      </div>
+      <br>
+      </div>
+      DELIMITER;
+    echo $product;
+  }
+
+  public function ShowFeaturedProduct()
+  {
+    // 1.Get product list sorted by performance
+    $ib = new InventoryB();
+    $featuredList = $ib->GetPoorPerformanceList($this->from, $this->to);
+
+    foreach ($featuredList as $x => $x_value) {
+      $pb = new ProductB();
+      $result = $pb->GetProductsByID($x);
+      $row = mysqli_fetch_array($result);
+      $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id']);
     }
   }
 
-  public function ShowProductsInCategory()
+  public function ShowProductByUser()
   {
-    $pb = new ProductB();
     $cp = new CategoryP();
     $cat_id = $cp->GetCategory();
+    if ($cat_id == 0) {
+      $this->ShowFeaturedProduct();
+    } else {
+      $this->ShowProductsInCategory($cat_id);
+    }
+  }
+
+  public function ShowProductsInCategory($cat_id)
+  {
+    $pb = new ProductB();
     $result = $pb->GetAllProductFromCategory($cat_id);
 
     while ($row = mysqli_fetch_array($result)) {
-      $product = <<<DELIMITER
-        <div class="col-sm-4">
-        <div class="card">
-        <img class="card-img-top" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22286%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20286%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_16da67aaf0c%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A14pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_16da67aaf0c%22%3E%3Crect%20width%3D%22286%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22107.1953125%22%20y%3D%2296.3%22%3E286x180%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" alt="Card image cap">
-        <div class="card-body">
-          <h5 class="card-title">{$row['product_name']}</h5>
-          <p class="card-text">\${$row['product_price']}</p>
-          <a href="#" class="btn btn-primary">Add to card</a>
-        </div>
-        </div>
-        <br>
-        </div>
-        DELIMITER;
-      echo $product;
+      $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id']);
     }
   }
 }
