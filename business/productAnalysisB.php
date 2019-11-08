@@ -9,9 +9,13 @@ $test = new ProductAnalysisB();
 //$test->BuildUpDataset($product_name, $return_list);
 $type = "class";
 $rule = "price";
+$raw = "19.000.000   đ   Tra gop ahihi";
 $link = "https://www.thegioididong.com/dtdd/iphone-x-64gb";
 //$test->CheckRuleMatchLink($link, $type, $rule);
 $test->TrainRule($product_name);
+//$test->GetUnfriendlyLinks($product_name);
+//$test->FindPrice($link);
+//$test->GetPrice($raw);
 
 class ProductAnalysisB
 {
@@ -59,6 +63,9 @@ class ProductAnalysisB
         $matched_num += $this->CompareClassRule($all[$i], $rule);
         $matched_num += $this->CompareIDRule($all[$i], $rule);
       }
+      // if ($matched_num > 0) {
+      //   return $matched_num;
+      // }
     }
     return $matched_num;
   }
@@ -70,6 +77,8 @@ class ProductAnalysisB
       echo $element->tag . '<br>';
       echo $id;
       $pt2 = $element->plaintext . '<br>';
+      //echo $pt2 . '<br>';
+      $this->GetPrice($pt2);
       echo '<br>';
       return 1;
     }
@@ -83,10 +92,37 @@ class ProductAnalysisB
       echo $element->tag . '<br>';
       echo $class;
       $pt1 = $element->plaintext . '<br>';
+      echo $pt1 . '<br>';
+      $this->GetPrice($pt1);
       echo '<br>';
       return 1;
     }
     return 0;
+  }
+
+  public function GetPrice($raw_string)
+  {
+    $pt1 = implode("", explode(" ", $raw_string));
+    $end = stripos($pt1, "₫");
+    $start = $end - 1;
+    $price = 0;
+    $base = 1;
+    while ($start >= 0) {
+      $link = substr($pt1, $start, $end - $start);
+      if (is_numeric($link) || ($link == ".")) {
+        if ($link != ".") {
+          $price = $price + $base * intval($link);
+          $base = $base * 10;
+        }
+        // echo $link . '<br>';
+      } 
+      // else {
+      //   $start = -1;
+      // }
+      $end = $start;
+      $start = $end - 1;
+    }
+    echo $price;
   }
 
   public function GetType($type)
@@ -116,7 +152,7 @@ class ProductAnalysisB
     $return_list = $this->GetAllLinks($product_name);
 
     // 2.Get rules and test train
-    $sql = "SELECT * FROM Rules";
+    $sql = "SELECT * FROM rules";
     $db = new Database();
     $result = $db->select($sql);
     while ($row = mysqli_fetch_array($result)) {
@@ -146,6 +182,55 @@ class ProductAnalysisB
       $ratio = (float) $count / count($return_list);
       $this->UpdateMatchingRatio($row['rule_id'], $ratio);
     }
+  }
+
+  public function GetUnfriendlyLinks($product_name)
+  {
+    // 1.Get dataset
+    $link_list = $this->GetAllLinks($product_name);
+
+    //2. Get All Rule
+    $rule_list = $this->GetAllRule();
+
+    //3. Check every link in Relationship table
+    $return_list = array();
+    foreach ($link_list as $link_id => $link_name) {
+      $flag = 1;
+      foreach ($rule_list as $rule_id => $rule_name) {
+        // Check rule match link
+        $num = $this->CheckLinkMatchRule($link_id, $rule_id);
+        if ($num == 1) {
+          $flag = 0;
+        }
+      }
+      if ($flag == 1) {
+        $return_list["{$link_id}"] = "{$link_name}";
+      }
+    }
+    return $return_list;
+  }
+
+  public function CheckLinkMatchRule($link_id, $rule_id)
+  {
+    $sql = "SELECT `is_indentified_price` FROM `rule_and_dataset` WHERE link_id = {$link_id} AND rule_id = {$rule_id}";
+    $db = new Database();
+    $result = $db->select($sql);
+    $row = mysqli_fetch_array($result);
+    return $row['is_indentified_price'];
+  }
+
+  public function GetAllRule()
+  {
+    $sql = "SELECT * FROM rules";
+    $db = new Database();
+    $result = $db->select($sql);
+    $return_list = array();
+    while ($row = mysqli_fetch_array($result)) {
+      $rule_ID = $row['rule_id'];
+      $rule_name = $row['name'];
+      $return_list["{$rule_ID}"] = "{$rule_name}";
+    }
+    return $return_list;
   }
 
   public function UpdateRelationshipTable($rule_id, $link_id, $is_visited, $is_price)
