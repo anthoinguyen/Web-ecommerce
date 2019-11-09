@@ -49,6 +49,7 @@ class ProductAnalysisB
   public function CheckRuleMatchLink($link, $type, $rule)
   {
     $html = file_get_html($link);
+    //echo $link . '<br>';
     $all = $html->find("*");
     $matched_num = 0;
 
@@ -56,54 +57,75 @@ class ProductAnalysisB
       $temp = $this->GetType($type);
 
       if ($temp == 1) {
-        $matched_num += $this->CompareClassRule($all[$i], $rule);
+        $matched_num += $this->CompareClassRule($all[$i], $rule, $link);
       } else if ($temp == 2) {
-        $matched_num += $this->CompareIDRule($all[$i], $rule);
+        $matched_num += $this->CompareIDRule($all[$i], $rule, $link);
       } else {
-        $matched_num += $this->CompareClassRule($all[$i], $rule);
-        $matched_num += $this->CompareIDRule($all[$i], $rule);
+        $matched_num += $this->CompareClassRule($all[$i], $rule, $link);
+        $matched_num += $this->CompareIDRule($all[$i], $rule, $link);
       }
-      // if ($matched_num > 0) {
-      //   return $matched_num;
-      // }
+      if ($matched_num > 0) {
+        return $matched_num;
+      }
     }
     return $matched_num;
   }
 
-  public function CompareIDRule($element, $rule)
+  public function CompareIDRule($element, $rule, $link)
   {
     $id = 'Class: ' . $element->id . '<br>';
     if (stripos($id, $rule) !== false) {
-      echo $element->tag . '<br>';
-      echo $id;
+      //echo $element->tag . '<br>';
+      //echo $id;
       $pt2 = $element->plaintext . '<br>';
-      //echo $pt2 . '<br>';
-      $this->GetPrice($pt2);
+      echo $pt2 . '<br>';
+      $check_price = $this->GetPrice($pt2);
+      $flag = $this->CheckPrice($check_price);
+      if ($flag == 1) {
+        echo $check_price . '<br>';
+        $this->UpdatePriceInDataset($link, $check_price);
+      }
       echo '<br>';
       return 1;
     }
     return 0;
   }
 
-  public function CompareClassRule($element, $rule)
+  public function CompareClassRule($element, $rule, $link)
   {
     $class = 'Class: ' . $element->class . '<br>';
     if (stripos($class, $rule) !== false) {
-      echo $element->tag . '<br>';
-      echo $class;
+      //echo $element->tag . '<br>';
+      //echo $class;
       $pt1 = $element->plaintext . '<br>';
       echo $pt1 . '<br>';
-      $this->GetPrice($pt1);
+      $check_price = $this->GetPrice($pt1);
+      $flag = $this->CheckPrice($check_price);
+      if ($flag == 1) {
+        echo $check_price . '<br>';
+        $this->UpdatePriceInDataset($link, $check_price);
+      }
       echo '<br>';
       return 1;
     }
     return 0;
+  }
+
+  public function UpdatePriceInDataset($link, $price)
+  {
+    $LINK = "'" . $link . "'";
+    $sql = "UPDATE `Dataset` SET `price` = {$price} WHERE link_name = {$LINK}";
+    $db = new Database();
+    $db->insert($sql);
   }
 
   public function GetPrice($raw_string)
   {
     $pt1 = implode("", explode(" ", $raw_string));
     $end = stripos($pt1, "₫");
+    if ($end == false) {
+      $end = stripos($pt1, "đ");
+    }
     $start = $end - 1;
     $price = 0;
     $base = 1;
@@ -115,14 +137,29 @@ class ProductAnalysisB
           $base = $base * 10;
         }
         // echo $link . '<br>';
-      } 
+      }
       // else {
       //   $start = -1;
       // }
       $end = $start;
       $start = $end - 1;
     }
-    echo $price;
+    return $price;
+  }
+
+  public function CheckPrice($check_price)
+  {
+    $base_price = 20000000;
+    $num = $base_price - $check_price;
+
+    if ($num < 0) {
+      $num = -1 * $num;
+    }
+    $p = (float) $num / $base_price;
+    if ($p > 0.2) {
+      return -1;
+    }
+    return 1;
   }
 
   public function GetType($type)
