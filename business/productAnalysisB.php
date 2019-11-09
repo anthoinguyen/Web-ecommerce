@@ -3,24 +3,59 @@
 <?php
 $from = "2019-08-01";
 $to = "2019-10-31";
-$product_name = "iphone x 64gb";
+$product_name = "Samsung Galaxy A50s";
 $test = new ProductAnalysisB();
 //$return_list = $test->GetRelevantLinks($product_name);
 //$test->BuildUpDataset($product_name, $return_list);
-$type = "class";
-$rule = "price";
-$raw = "19.000.000   đ   Tra gop ahihi";
 $link = "https://www.thegioididong.com/dtdd/iphone-x-64gb";
 //$test->CheckRuleMatchLink($link, $type, $rule);
-$test->TrainRule($product_name);
+//$test->TrainRule($product_name);
 //$test->GetUnfriendlyLinks($product_name);
-//$test->FindPrice($link);
 //$test->GetPrice($raw);
+$test->SearchCompetitivePrice($product_name);
+
 
 class ProductAnalysisB
 {
   private $hight_view = 2;
   private $google_link = "https://www.google.com/search?q=";
+
+  public function SearchCompetitivePrice($product_name)
+  {
+    $price = 0;
+
+    // 1.Look at dataset and get min price
+    $price = $this->GetMinPrice($product_name);
+    if ($price > 0) {
+      return $price;
+    }
+
+    // 2.Generate link
+    $return_list = $this->GetRelevantLinks($product_name);
+    $this->BuildUpDataset($product_name, $return_list);
+    $return_list_1 = $this->GetAllLinks($product_name);
+    $min_price = -1;
+
+    foreach ($return_list_1 as $x => $x_value) {
+      // 3.Look at rule
+      $sql = "SELECT * FROM rules ORDER BY matching_ratio DESC";
+      $db = new Database();
+      $result = $db->select($sql);
+      $flag = 1;
+      while ($flag == 1 && $row = mysqli_fetch_array($result)) {
+        $rule_name = $row['name'];
+        $type = $row['class_or_ID'];
+        $num = $this->CheckRuleMatchLink($x_value, $type, $rule_name);
+        if ($num > 1) {
+          if ($min_price == -1 || $min_price > $num) {
+            $min_price = $num;
+            $flag = -1;
+          }
+        }
+      }
+      echo "MIN PRICE" . $min_price . '<br>';
+    }
+  }
 
   public function GetRelevantLinks($product_name)
   {
@@ -30,6 +65,7 @@ class ProductAnalysisB
 
     // 2.Send search string and get result 
     $html = file_get_html($url);
+
     // 3.Analyze search result and get
     // plaintext is content inside
     $return_list = array();
@@ -42,8 +78,43 @@ class ProductAnalysisB
         }
       }
     }
-
     return $return_list;
+  }
+
+  public function TrainRule($product_name)
+  {
+    // 1.Get dataset
+    $return_list = $this->GetAllLinks($product_name);
+
+    // 2.Get rules and test train
+    $sql = "SELECT * FROM rules";
+    $db = new Database();
+    $result = $db->select($sql);
+    while ($row = mysqli_fetch_array($result)) {
+      $rule_name = $row['name'];
+      $type = $row['class_or_ID'];
+      $rule_id = $row['rule_id'];
+      $is_price = -1;
+      $count = 0;
+      foreach ($return_list as $x => $x_value) {
+        $is_price = 0;
+        $num = $this->CheckRuleMatchLink($x_value, $type, $rule_name);
+        if ($num > 0) {
+          $count++;
+          $is_price = 1;
+        }
+        // Update relationship table
+        if ($this->IsLearn($rule_id, $x) == 0) {
+          if ($is_price > 0) {
+            $this->UpdateRelationshipTable($rule_id, $x, 1, $is_price);
+          }
+        }
+      }
+
+      //1. Update matching ratio
+      $ratio = (float) $count / count($return_list);
+      $this->UpdateMatchingRatio($row['rule_id'], $ratio);
+    }
   }
 
   public function CheckRuleMatchLink($link, $type, $rule)
@@ -84,6 +155,7 @@ class ProductAnalysisB
       if ($flag == 1) {
         echo $check_price . '<br>';
         $this->UpdatePriceInDataset($link, $check_price);
+        return $check_price;
       }
       echo '<br>';
       return 1;
@@ -104,6 +176,7 @@ class ProductAnalysisB
       if ($flag == 1) {
         echo $check_price . '<br>';
         $this->UpdatePriceInDataset($link, $check_price);
+        return $check_price;
       }
       echo '<br>';
       return 1;
@@ -149,7 +222,7 @@ class ProductAnalysisB
 
   public function CheckPrice($check_price)
   {
-    $base_price = 20000000;
+    $base_price = 6700000;
     $num = $base_price - $check_price;
 
     if ($num < 0) {
@@ -183,44 +256,6 @@ class ProductAnalysisB
     return $row['num'];
   }
 
-  public function TrainRule($product_name)
-  {
-    // 1.Get dataset
-    $return_list = $this->GetAllLinks($product_name);
-
-    // 2.Get rules and test train
-    $sql = "SELECT * FROM rules";
-    $db = new Database();
-    $result = $db->select($sql);
-    while ($row = mysqli_fetch_array($result)) {
-      $rule_name = $row['name'];
-      $type = $row['class_or_ID'];
-      $rule_id = $row['rule_id'];
-      $is_price = -1;
-      $count = 0;
-      foreach ($return_list as $x => $x_value) {
-        $is_price = 0;
-        $num = $this->CheckRuleMatchLink($x_value, $type, $rule_name);
-        if ($num > 0) {
-          $count++;
-          $is_price = 1;
-        }
-        // Update relationship table
-        if ($this->IsLearn($rule_id, $x) == 0) {
-          if ($is_price > 0) {
-            $this->UpdateRelationshipTable($rule_id, $x, 1, $is_price);
-          } else {
-            $this->UpdateRelationshipTable($rule_id, $x, 1, $is_price);
-          }
-        }
-      }
-
-      //1. Update matching ratio
-      $ratio = (float) $count / count($return_list);
-      $this->UpdateMatchingRatio($row['rule_id'], $ratio);
-    }
-  }
-
   public function GetUnfriendlyLinks($product_name)
   {
     // 1.Get dataset
@@ -245,6 +280,17 @@ class ProductAnalysisB
       }
     }
     return $return_list;
+  }
+
+  public function GetMinPrice($product_name)
+  {
+    $PROD = "'" . $product_name . "'";
+    $sql = "SELECT min(price) as PRICE FROM (SELECT * FROM `Dataset` WHERE `price` > 0 AND product_name = {$PROD}) as Alias";
+    $db = new Database();
+    $result = $db->select($sql);
+    $row = mysqli_fetch_array($result);
+    echo $row['PRICE'];
+    return $row['PRICE'];
   }
 
   public function CheckLinkMatchRule($link_id, $rule_id)
@@ -333,20 +379,6 @@ class ProductAnalysisB
     $result = $db->select($sql);
     $row = mysqli_fetch_array($result);
     return $row['NUM'];
-  }
-
-  public function FindPrice($link)
-  {
-    $html = file_get_html($link);
-    //$ret = $html->find('.area_price');
-    //$test = '.area_price';
-    $test = '.fs-dtprice';
-    //$test = '#_price_new436';
-    //$test = '.price';
-    //$test = '.area_price';
-    echo $test;
-    foreach ($html->find($test) as $element)
-      echo $element . '<br>';
   }
 
   public function StandarizeLink($raw_link)
