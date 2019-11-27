@@ -1,5 +1,4 @@
-<?php include "../include/lib/simple_html_dom.php"; ?>
-<?php include "../data/database.php" ?>
+<?php include "include/lib/simple_html_dom.php"; ?>
 
 <?php
 $from = "2019-08-01";
@@ -13,7 +12,7 @@ $link = "https://www.thegioididong.com/dtdd/iphone-x-64gb";
 //$test->TrainRule($product_name);
 //$test->GetUnfriendlyLinks($product_name);
 //$test->GetPrice($raw);
-$test->SearchCompetitivePrice($product_name);
+//$test->SearchCompetitivePrice($product_name);
 
 
 class ProductAnalysisB

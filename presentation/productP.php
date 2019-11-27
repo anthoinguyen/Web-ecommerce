@@ -88,12 +88,21 @@ class ProductP
 
   public function ShowProductByUser()
   {
+    // $cp = new CategoryP();
+    // $cat_id = $cp->GetCategory();
+    // if ($cat_id == 0) {
+    //   $this->ShowFeaturedProduct();
+    // } else {
+    //   $this->ShowProductsInCategory($cat_id);
+    // }
+
     $cp = new CategoryP();
     $cat_id = $cp->GetCategory();
+    $product_group = $cp->GetGroup();
     if ($cat_id == 0) {
       $this->ShowFeaturedProduct();
     } else {
-      $this->ShowProductsInCategory($cat_id);
+      $this->ShowProductInGroup($cat_id, $product_group);
     }
   }
 
@@ -102,6 +111,15 @@ class ProductP
     $pb = new ProductB();
     $result = $pb->GetAllProductFromCategory($cat_id);
 
+    while ($row = mysqli_fetch_array($result)) {
+      $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id']);
+    }
+  }
+
+  public function ShowProductInGroup($cat_id, $product_group)
+  {
+    $cb = new CategoryB();
+    $result = $cb->GetProductInGroup($cat_id, $product_group);
     while ($row = mysqli_fetch_array($result)) {
       $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id']);
     }
