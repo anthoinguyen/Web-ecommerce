@@ -98,11 +98,11 @@ class ProductP
 
     $cp = new CategoryP();
     $cat_id = $cp->GetCategory();
-    $product_group = $cp->GetGroup();
+    // $product_group = $cp->GetPages();
     if ($cat_id == 0) {
       $this->ShowFeaturedProduct();
     } else {
-      $this->ShowProductInGroup($cat_id, $product_group);
+      $this->ShowProductByGroup();
     }
   }
 
@@ -116,13 +116,23 @@ class ProductP
     }
   }
 
-  public function ShowProductInGroup($cat_id, $product_group)
+  public function ShowProductByGroup()
   {
+    $cp = new CategoryP();
+    $cat_id = $cp->GetCategory();
+    $page_id = $cp->GetPages();
+
     $cb = new CategoryB();
-    $result = $cb->GetProductInGroup($cat_id, $product_group);
+    $result = $cb->GetProductInGroup($cat_id, $page_id);
     while ($row = mysqli_fetch_array($result)) {
       $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id']);
     }
+  }
+
+  public function VarForProductName($cat_id, $page_id, $product_name,$count)
+  {
+    $session_name = $cat_id . "_" . $page_id . "_" . "name" . "_" . $count;
+    $_SESSION["$session_name"] = $product_name;
   }
 }
 ?>

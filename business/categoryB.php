@@ -27,10 +27,17 @@ class CategoryB
 
   public function CalculateNumberOfLinks($cat_id)
   {
+    $session_name = "numPages_" . $cat_id;
+    if (isset($_SESSION["{$session_name}"])) {
+      $result = $_SESSION["{$session_name}"];
+      echo $session_name;
+      return $result;
+    }
     $num = $this->GetAmountOfProductInCategory($cat_id);
     $max = $this->MAX_PRODUCT;
     $result = (float) $num / $max;
     $result = ceil($result);
+    $_SESSION["{$session_name}"] = $result;
     return $result;
   }
 

@@ -9,7 +9,7 @@ class CategoryP
     $count = 1;
     while ($row = mysqli_fetch_array($result)) {
       $category = <<<DELIMITER
-         <a href="index.php?category={$count}&product_group=1" {$this->SetStyleForCurrentCategory($count)} class="list-group-item">{$row['cat_name']}</a> 
+         <a href="index.php?category={$count}&pages=1" {$this->SetStyleForCurrentCategory($count)} class="list-group-item">{$row['cat_name']}</a> 
         DELIMITER;
       echo $category;
       $count++;
@@ -21,7 +21,7 @@ class CategoryP
     $cat_id = $this->GetCategory();
     $style = "";
     if ($count == $cat_id)
-      $style = "style='color:blue'";
+      $style = "style='color:green'";
     return $style;
   }
 
@@ -34,41 +34,41 @@ class CategoryP
     return $cat_id;
   }
 
-  public function GetGroup()
+  public function GetPages()
   {
-    if (!isset($_GET['product_group'])) {
-      $product_group = 1;
+    if (!isset($_GET['pages'])) {
+      $pages = 1;
     } else {
-      $product_group = $_GET['product_group'];
+      $pages = $_GET['pages'];
     }
-    return $product_group;
+    return $pages;
   }
 
-  public function ShowLinkPagination()
+  public function BuildLinks()
   {
     $cb = new categoryB();
     $current_cat = $this->GetCategory();
-    $current_group = $this->GetGroup();
+    $current_group = $this->GetPages();
     $num = $cb->CalculateNumberOfLinks($current_cat);
     $previou = $current_group - 1;
     $previou_disable = $previou > 0 ? "" : "disable";
     $next = $current_group + 1;
     $next_disable = $next <= $num ? "" : "disable";
     $c = 1;
-    echo "<li class='page-item'><a class='page-link' " . $previou_disable .  "href='index.php?category={$current_cat}&product_group={$previou}'>Previous</a></li>";
+    echo "<li class='page-item'><a class='page-link' " . $previou_disable .  "href='index.php?category={$current_cat}&pages={$previou}'>Previous</a></li>";
     for ($x = 1; $x <= $num; $x++) {
       $link = <<<DELIMITER
-        <li class="page-item"><a class="page-link" {$this->SetStyleForCurrentPage($c)} href="index.php?category={$current_cat}&product_group={$x}">{$x}</a></li>
+        <li class="page-item"><a class="page-link" {$this->SetStyleForCurrentPage($c)} href="index.php?category={$current_cat}&pages={$x}">{$x}</a></li>
         DELIMITER;
       echo $link;
       $c++;
     }
-    echo "<li class='page-item'><a class='page-link' " .  $next_disable . "href='index.php?category={$current_cat}&product_group={$next}'>Next</a></li>";
+    echo "<li class='page-item'><a class='page-link' " .  $next_disable . "href='index.php?category={$current_cat}&pages={$next}'>Next</a></li>";
   }
 
   public function SetStyleForCurrentPage($c)
   {
-    $group_id = $this->GetGroup();
+    $group_id = $this->GetPages();
     $style = "";
     if ($c == $group_id)
       $style = "style='color:red'";
