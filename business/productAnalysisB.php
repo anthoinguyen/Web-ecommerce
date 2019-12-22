@@ -3,15 +3,18 @@
 <?php
 $from = "2019-08-01";
 $to = "2019-10-31";
-$product_name = "Samsung Galaxy A50";
+//$product_name = "Samsung Galaxy A30";
 //$test = new ProductAnalysisB();
+
 //$return_list = $test->GetRelevantLinks($product_name);
 //$test->BuildUpDataset($product_name, $return_list);
-$link = "https://www.thegioididong.com/dtdd/iphone-x-64gb";
+//$link = "https://www.thegioididong.com/dtdd/iphone-x-64gb";
 //$test->CheckRuleMatchLink($link, $type, $rule);
 //$test->TrainRule($product_name);
 //$test->GetUnfriendlyLinks($product_name);
 //$test->GetPrice($raw);
+
+//$test->TrainRule($product_name);
 //$test->SearchCompetitivePrice($product_name);
 
 
@@ -222,7 +225,7 @@ class ProductAnalysisB
 
   public function CheckPrice($check_price)
   {
-    $base_price = 6700000;
+    $base_price = 5800000;
     $num = $base_price - $check_price;
 
     if ($num < 0) {
@@ -351,7 +354,7 @@ class ProductAnalysisB
       // 1.Get link is not in dataset
       $test = $this->CheckLinkInDataset($x_value);
 
-      set_error_handle(function () { });
+      set_error_handler(function () { });
       $test1 = $this->TestLink($x_value);
       restore_error_handler();
 
@@ -414,9 +417,9 @@ class ProductAnalysisB
     $sql = "SELECT COUNT(*) as NUM FROM `Product Analysis` WHERE `product_id`={$product_id} AND `visited_date`>{$FROM} AND `visited_date`< {$TO}";
     $db = new Database();
     $result = $db->select($sql);
-    $row = mysqli_fetch_array($result);
-    echo $row['NUM'];
-    // return $result;
+    // $row = mysqli_fetch_array($result);
+    // echo $row['NUM'];
+    return $result;
   }
 
   public function UpdateViewOfProduct($product_id)

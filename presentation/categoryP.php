@@ -55,7 +55,9 @@ class CategoryP
     $next = $current_group + 1;
     $next_disable = $next <= $num ? "" : "disable";
     $c = 1;
-    echo "<li class='page-item'><a class='page-link' " . $previou_disable .  "href='index.php?category={$current_cat}&pages={$previou}'>Previous</a></li>";
+    if ($num > 1) {
+      echo "<li class='page-item'><a class='page-link' " . $previou_disable .  "href='index.php?category={$current_cat}&pages={$previou}'>Previous</a></li>";
+    }
     for ($x = 1; $x <= $num; $x++) {
       $link = <<<DELIMITER
         <li class="page-item"><a class="page-link" {$this->SetStyleForCurrentPage($c)} href="index.php?category={$current_cat}&pages={$x}">{$x}</a></li>
@@ -63,7 +65,9 @@ class CategoryP
       echo $link;
       $c++;
     }
-    echo "<li class='page-item'><a class='page-link' " .  $next_disable . "href='index.php?category={$current_cat}&pages={$next}'>Next</a></li>";
+    if ($num > 1) {
+      echo "<li class='page-item'><a class='page-link' " .  $next_disable . "href='index.php?category={$current_cat}&pages={$next}'>Next</a></li>";
+    }
   }
 
   public function SetStyleForCurrentPage($c)
