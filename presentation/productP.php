@@ -18,7 +18,8 @@ class ProductP
     $name = $row['product_name'];
     $price = $row['product_price'];
     $image = $row['product_image'];
-    $this->ShowSingleProduct($name, $price, $image);
+    $new_price = $row['new_price'];
+    $this->ShowSingleProduct($name, $price, $image, $new_price);
 
     // 3. Update view
     $pad = new ProductAnalysisB();
@@ -35,29 +36,61 @@ class ProductP
     return $product_id;
   }
 
-  public function ShowSingleProduct($name, $price1, $image)
+  public function ShowSingleProduct($name, $price1, $image, $new_price1)
   {
     $price = number_format($price1);
-    $product = <<<DELIMITER
+    if ($new_price1 != null) {
+      $new_price = number_format($new_price1);
+      $product = <<<DELIMITER
       <div class="col-sm-12">
       <div class="card">
-      <img class="card-img-top" src="{$image}" alt="Card image cap">
-      <div class="card-body">
+      <div class="row">
+      <div class="col-sm-6">
+      <img class="card-img-top" style="height:400px; width:350px; margin:10px; display:inline-block" src="{$image}" alt="Card image cap">
+      </div>
+      <div class="col-sm-6">
+      <div class="card-body" style="dislay:inline-block">
         <h5 class="card-title" style="font-size:22px">{$name}</h5>
-        <p class="card-text">{$price} <span style="font-weight:bold; font-size: 17px">₫</span></p>
+        <p class="card-text" style="text-decoration:line-through; font-size:12px; margin-bottom:5px">{$price} <span style="font-size: 15px">₫</span></p>
+        <p class="card-text" style="color:red">{$new_price} <span style="font-weight:bold; font-size: 17px">₫</span></p>
         <a href="#" class="btn btn-primary">Add to card</a>
+      </div>
+      </div>
       </div>
       </div>
       <br>
       </div>
       DELIMITER;
+    } else {
+      $product = <<<DELIMITER
+      <div class="col-sm-12">
+      <div class="card">
+      <div class="row">
+      <div class="col-sm-6">
+      <img class="card-img-top" style="height:400px; width:350px; margin:10px; display:inline-block" src="{$image}" alt="Card image cap">
+      </div>
+      <div class="col-sm-6">
+      <div class="card-body">
+        <h5 class="card-title" style="font-size:22px">{$name}</h5>
+        <p class="card-text" style="color:red">{$price} <span style="font-weight:bold; font-size: 17px">₫</span></p>
+        <a href="#" class="btn btn-primary">Add to card</a>
+      </div>
+      </div>
+      </div>
+      </div>
+      <br>
+      </div>
+      DELIMITER;
+    }
     echo $product;
   }
 
-  public function ShowProduct($name, $price1, $id, $image)
+  public function ShowProduct($name, $price1, $id, $image, $new_price1)
   {
     $price = number_format($price1);
-    $product = <<<DELIMITER
+    if ($new_price1 != null) {
+      $new_price = number_format($new_price1);
+      $product = <<<DELIMITER
       <div class="col-sm-4">
       <div class="card">
       <a href="item.php?product_id={$id}">
@@ -65,13 +98,31 @@ class ProductP
       </a>
       <div class="card-body">
         <h5 class="card-title" style="font-size:16px">{$name}</h5>
-        <p class="card-text">{$price} <span style="font-weight:bold; font-size:17px">₫</span></p>
+        <p class="card-text" style="color:red; display:inline-block; margin-right:10px">{$new_price} <span style="font-size:17px">₫</span></p>
+        <p class="card-text" style="text-decoration:line-through; font-size:12px; margin-bottom:5px; display:inline-block">{$price} <span style="font-size: 15px">₫</span></p>
         <a href="#" class="btn btn-primary">Add to card</a>
       </div>
       </div>
       <br>
       </div>
       DELIMITER;
+    } else {
+      $product = <<<DELIMITER
+      <div class="col-sm-4">
+      <div class="card">
+      <a href="item.php?product_id={$id}">
+      <img class="card-img-top" src="{$image}" alt="Card image cap">
+      </a>
+      <div class="card-body">
+        <h5 class="card-title" style="font-size:16px">{$name}</h5>
+        <p class="card-text" style="color:red">{$price} <span style="font-size:17px">₫</span></p>
+        <a href="#" class="btn btn-primary">Add to card</a>
+      </div>
+      </div>
+      <br>
+      </div>
+      DELIMITER;
+    }
     echo $product;
   }
 
@@ -86,7 +137,7 @@ class ProductP
         $pb = new ProductB();
         $result = $pb->GetProductsByID($x);
         $row = mysqli_fetch_array($result);
-        $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id'], $row['product_image']);
+        $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id'], $row['product_image'], $row['new_price']);
       }
       $count++;
     }
@@ -118,7 +169,7 @@ class ProductP
     $result = $pb->GetAllProductFromCategory($cat_id);
 
     while ($row = mysqli_fetch_array($result)) {
-      $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id'], $row['product_image']);
+      $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id'], $row['product_image'], $row['new_price']);
     }
   }
 
@@ -131,7 +182,7 @@ class ProductP
     $cb = new CategoryB();
     $result = $cb->GetProductInGroup($cat_id, $page_id);
     while ($row = mysqli_fetch_array($result)) {
-      $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id'], $row['product_image']);
+      $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id'], $row['product_image'], $row['new_price']);
     }
   }
 

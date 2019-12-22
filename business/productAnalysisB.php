@@ -3,7 +3,7 @@
 <?php
 $from = "2019-08-01";
 $to = "2019-10-31";
-//$product_name = "Samsung Galaxy A30";
+//$product_name = "Xiaomi Mi 9T";
 //$test = new ProductAnalysisB();
 
 //$return_list = $test->GetRelevantLinks($product_name);
@@ -17,7 +17,6 @@ $to = "2019-10-31";
 //$test->TrainRule($product_name);
 //$test->SearchCompetitivePrice($product_name);
 
-
 class ProductAnalysisB
 {
   private $hight_view = 2;
@@ -28,10 +27,11 @@ class ProductAnalysisB
     $price = 0;
 
     // 1.Look at dataset and get min price
-    $price = $this->GetMinPrice($product_name);
-    if ($price > 0) {
-      return $price;
-    }
+    // $price = $this->GetMinPrice($product_name);
+    // if ($price > 0) {
+    //   $this->UpdateMinPriceInProduct($product_name,$price);
+    //   return $price;
+    // }
 
     // 2.Generate link
     $return_list = $this->GetRelevantLinks($product_name);
@@ -58,6 +58,21 @@ class ProductAnalysisB
       }
       echo "MIN PRICE" . $min_price . '<br>';
     }
+
+    $price = $this->GetMinPrice($product_name);
+    if ($price > 0) {
+      $this->UpdateMinPriceInProduct($product_name,$price);
+      return $price*0.95;
+    }
+  }
+
+  public function UpdateMinPriceInProduct($product_name,$price)
+  {
+    $PRO = "'" . $product_name . "'";
+    $new_price = $price * 0.95;
+    $sql = "UPDATE `Product` SET `new_price` = {$new_price} WHERE product_name = {$PRO}";
+    $db = new Database();
+    $db->insert($sql);
   }
 
   public function GetRelevantLinks($product_name)
@@ -152,11 +167,11 @@ class ProductAnalysisB
       //echo $element->tag . '<br>';
       //echo $id;
       $pt2 = $element->plaintext . '<br>';
-      echo $pt2 . '<br>';
+      //echo $pt2 . '<br>';
       $check_price = $this->GetPrice($pt2);
       $flag = $this->CheckPrice($check_price);
       if ($flag == 1) {
-        echo $check_price . '<br>';
+        //echo $check_price . '<br>';
         $this->UpdatePriceInDataset($link, $check_price);
         return $check_price;
       }
@@ -173,11 +188,11 @@ class ProductAnalysisB
       //echo $element->tag . '<br>';
       //echo $class;
       $pt1 = $element->plaintext . '<br>';
-      echo $pt1 . '<br>';
+      //echo $pt1 . '<br>';
       $check_price = $this->GetPrice($pt1);
       $flag = $this->CheckPrice($check_price);
       if ($flag == 1) {
-        echo $check_price . '<br>';
+        //echo $check_price . '<br>';
         $this->UpdatePriceInDataset($link, $check_price);
         return $check_price;
       }
@@ -225,7 +240,7 @@ class ProductAnalysisB
 
   public function CheckPrice($check_price)
   {
-    $base_price = 5800000;
+    $base_price = 8000000;
     $num = $base_price - $check_price;
 
     if ($num < 0) {

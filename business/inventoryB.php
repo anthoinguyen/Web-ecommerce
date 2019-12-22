@@ -1,8 +1,8 @@
 <?php
-// $test = new InventoryB();
-// $from = "2019-08-01";
-// $to = "2019-12-21";
-//$test->UpdatePerformanceTable(1,$from,$to);
+//$test = new InventoryB();
+$from = "2019-08-01";
+$to = "2019-12-21";
+//$test->UpdatePerformanceTable(30,$from,$to);
 
 //$test->GetPoorPerformanceList($from,$to);
 class InventoryB
