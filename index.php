@@ -71,7 +71,7 @@
           ?>
         </div>
       </div>
-      <nav aria-label="Page navigation example">
+      <nav aria-label="Page navigation example" style="display:inline; margin-left:77%">
         <ul class="pagination">
           <!-- <li class="page-item"><a class="page-link" href="#">Previous</a></li> -->
           <?php
@@ -160,7 +160,7 @@
         </div>
       </div>
     </div>
-    <div class="footer-copyright text-center py-3">© 2018 Copyright: UIT - AnThoi
+    <div class="footer-copyright text-center py-3">© 2019 Copyright: UIT - AnThoi
     </div>
   </footer>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
