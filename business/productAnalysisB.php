@@ -2,7 +2,7 @@
 
 <?php
 $from = "2019-08-01";
-$to = "2019-12-31";
+$to = "2019-12-23";
 //$product_name = "Xiaomi Mi 9T";
 //$test = new ProductAnalysisB();
 

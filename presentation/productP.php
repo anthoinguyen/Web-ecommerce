@@ -88,7 +88,7 @@ class ProductP
   public function ShowProduct($name, $price1, $id, $image, $new_price1)
   {
     $from = "2019-08-01";
-    $to = "2019-12-31";
+    $to = "2019-12-25";
     $pad = new ProductAnalysisB();
     $getview = $pad->GetView($id, $from, $to);
     $view = $getview ? $getview : 0;
@@ -186,17 +186,41 @@ class ProductP
     $cat_id = $cp->GetCategory();
     $page_id = $cp->GetPages();
 
+    $session_name = "category" . $cat_id . "page" . $page_id;
+
+    if (isset($_SESSION["{$session_name}"])) {
+      for ($i = 0; $i < 3; $i++) {
+        if (isset($_SESSION["{$session_name}"][$i])) {
+          $row = $_SESSION["{$session_name}"][$i];
+          echo "have session";
+          $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id'], $row['product_image'], $row['new_price']);
+        }
+      }
+      return;
+    }
+
+
     $cb = new CategoryB();
     $result = $cb->GetProductInGroup($cat_id, $page_id);
+    $count = 0;
     while ($row = mysqli_fetch_array($result)) {
+      $_SESSION["{$session_name}"]["{$count}"] = array(
+        "product_name" => $row['product_name'],
+        "product_price" => $row['product_price'],
+        "product_image" => $row['product_image'],
+        "product_id" => $row['product_id'],
+        "new_price" => $row['new_price']
+      );
+      echo "haven't session";
       $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id'], $row['product_image'], $row['new_price']);
+      $count++;
     }
   }
 
-  public function VarForProductName($cat_id, $page_id, $product_name, $count)
-  {
-    $session_name = $cat_id . "_" . $page_id . "_" . "name" . "_" . $count;
-    $_SESSION["$session_name"] = $product_name;
-  }
+  // public function VarForProductName($cat_id, $page_id, $product_name, $count)
+  // {
+  //   $session_name = $cat_id . "_" . $page_id . "_" . "name" . "_" . $count;
+  //   $_SESSION["$session_name"] = $product_name;
+  // }
 }
 ?>
