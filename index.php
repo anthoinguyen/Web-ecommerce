@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,9 +13,11 @@
 </head>
 
 <body>
+  
+
   <!-- Navbar -->
   <div class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">An Thới</a>
+    <a class="navbar-brand" href="#">Minh Trung</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -69,6 +74,9 @@
           $pp->ShowProductByUser();
           ?>
         </div>
+        <?php
+          $cp->BuildLinks();
+          ?>
       </div>
     </div>
   </div>
@@ -150,7 +158,7 @@
         </div>
       </div>
     </div>
-    <div class="footer-copyright text-center py-3">© 2018 Copyright: UIT - AnThoi
+    <div class="footer-copyright text-center py-3">© 2018 Copyright: UIT - MinhTrung
     </div>
   </footer>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

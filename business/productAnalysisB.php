@@ -1,10 +1,9 @@
-<?php include "../data/database.php"; ?>
-<?php include "../include/lib/simple_html_dom.php"; ?>
+
 <?php
   $from = "2019-08-01";
   $to = "2019-10-31";
-  $product_name = "Samsung Galaxy A50s";
-  $test = new ProductAnalysisB();
+  $product_name = "Samsung Galaxy A30s";
+  //$test = new ProductAnalysisB();
   //$return_list = $test->GetRelevantLinks($product_name);
   //$test->BuildUpDataset($product_name, $return_list);
   $link = "https://www.thegioididong.com/dtdd/iphone-x-64gb";
@@ -12,7 +11,7 @@
   //$test->TrainRule($product_name);
   //$test->GetUnfriendlyLinks($product_name);
   //$test->GetPrice($raw);
-  $test->SearchCompetitivePrice($product_name);
+  // $test->SearchCompetitivePrice($product_name);
 
 
 class ProductAnalysisB
@@ -53,7 +52,7 @@ class ProductAnalysisB
           }
         }
       }
-      echo "MIN PRICE" . $min_price . '<br>';
+      //echo "MIN PRICE" . $min_price . '<br>';
     }
   }
 
@@ -350,7 +349,9 @@ class ProductAnalysisB
     foreach ($return_list as $x => $x_value) {
       // 1.Get link is not in dataset
       $test = $this->CheckLinkInDataset($x_value);
+      set_error_handler(function(){});
       $test1 = $this->TestLink($x_value);
+      restore_error_handler();
       // 2.Insert this link
       if ($test == 0 && $test1 == 1) {
         $PROD = "'" . $product_name . "'";

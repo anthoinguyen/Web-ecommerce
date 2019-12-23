@@ -4,11 +4,13 @@
 <?php
 class ProductP
 {
+
   private $from = "2019-09-01";
   private $to = "2019-10-08";
 
   public function ShowItem()
   {
+  
     // 1. Get product id
     $product_id = $this->GetProduct();
     // 2. Show single product
@@ -68,6 +70,7 @@ class ProductP
       </div>
       <br>
       </div>
+      
       DELIMITER;
     echo $product;
   }
@@ -86,6 +89,33 @@ class ProductP
     }
   }
 
+  public function VarForProductName($cat_id, $page_id, $product_name, $count)
+  {
+    $session_name = $cat_id . "_" . $page_id . "_" . "name" . "_" . $count;
+    if(isset($_SESSION["{$session_name}"])){
+      $product_name = ($_SESSION["{$session_name}"]);
+      echo $session_name . "<br>";
+      echo $product_name . "<br>";
+  }
+  $_SESSION["{$session_name}"] = $product_name;
+}
+
+  public function ShowProductByGroup()
+  {
+
+    $cp = new CategoryP();
+    $cat_id = $cp->GetCategory();
+    $page_id = $cp->GetPage();
+    $cb = new CategoryB();
+    $result = $cb->GetProductsInGroup($cat_id, $page_id);
+    $count = 0;
+    while ($row = mysqli_fetch_array($result)) {
+      $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id']);
+      $count++;
+      $this->VarForProductName($cat_id,$page_id,$row['product_name'],$count);
+    }
+  }
+
   public function ShowProductByUser()
   {
     $cp = new CategoryP();
@@ -93,7 +123,7 @@ class ProductP
     if ($cat_id == 0) {
       $this->ShowFeaturedProduct();
     } else {
-      $this->ShowProductsInCategory($cat_id);
+      $this->ShowProductByGroup();
     }
   }
 
