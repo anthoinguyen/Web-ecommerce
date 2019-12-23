@@ -87,6 +87,11 @@ class ProductP
 
   public function ShowProduct($name, $price1, $id, $image, $new_price1)
   {
+    $from = "2019-08-01";
+    $to = "2019-12-31";
+    $pad = new ProductAnalysisB();
+    $getview = $pad->GetView($id, $from, $to);
+    $view = $getview ? $getview : 0;
     $price = number_format($price1);
     if ($new_price1 != null) {
       $new_price = number_format($new_price1);
@@ -94,13 +99,14 @@ class ProductP
       <div class="col-sm-4">
       <div class="card">
       <a href="item.php?product_id={$id}">
-      <img class="card-img-top" src="{$image}" alt="Card image cap">
+      <img class="card-img-top" style="margin:5px 0" src="{$image}" alt="Card image cap">
       </a>
       <div class="card-body">
         <h5 class="card-title" style="font-size:16px">{$name}</h5>
         <p class="card-text" style="color:red; display:inline-block; margin-right:10px">{$new_price} <span style="font-size:17px">₫</span></p>
         <p class="card-text" style="text-decoration:line-through; font-size:12px; margin-bottom:5px; display:inline-block">{$price} <span style="font-size: 15px">₫</span></p>
         <a href="#" class="btn btn-primary">Add to card</a>
+        <p class="card-text" style="display:inline; margin-left:40px;font-size:12px"> <i class="fas fa-eye" style="margin-right:3px"></i>{$view}</p>
       </div>
       </div>
       <br>
@@ -111,12 +117,13 @@ class ProductP
       <div class="col-sm-4">
       <div class="card">
       <a href="item.php?product_id={$id}">
-      <img class="card-img-top" src="{$image}" alt="Card image cap">
+      <img class="card-img-top" style="margin:5px 0" src="{$image}" alt="Card image cap">
       </a>
       <div class="card-body">
         <h5 class="card-title" style="font-size:16px">{$name}</h5>
         <p class="card-text" style="color:red">{$price} <span style="font-size:17px">₫</span></p>
         <a href="#" class="btn btn-primary">Add to card</a>
+        <p class="card-text" style="display:inline; margin-left:40px;font-size:12px"> <i class="fas fa-eye" style="margin-right:3px"></i>{$view}</p>
       </div>
       </div>
       <br>

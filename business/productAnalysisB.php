@@ -2,7 +2,7 @@
 
 <?php
 $from = "2019-08-01";
-$to = "2019-10-31";
+$to = "2019-12-31";
 //$product_name = "Xiaomi Mi 9T";
 //$test = new ProductAnalysisB();
 
@@ -432,9 +432,9 @@ class ProductAnalysisB
     $sql = "SELECT COUNT(*) as NUM FROM `Product Analysis` WHERE `product_id`={$product_id} AND `visited_date`>{$FROM} AND `visited_date`< {$TO}";
     $db = new Database();
     $result = $db->select($sql);
-    // $row = mysqli_fetch_array($result);
+    $row = mysqli_fetch_array($result);
     // echo $row['NUM'];
-    return $result;
+    return  $row['NUM'];
   }
 
   public function UpdateViewOfProduct($product_id)
