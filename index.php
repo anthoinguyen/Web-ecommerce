@@ -7,12 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Ecommerce</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 
-<body>
+<body style="font-family: 'Roboto', sans-serif;">
   <!-- Navbar -->
   <div class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="/">An Thới</a>
@@ -45,7 +47,14 @@
       <form class="form-inline my-2 my-lg-0">
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        <i class="fas fa-cart-plus" style="font-size:30px; color:blue; margin-left:400px;  margin-right:10px; opacity:0.5"></i>
+        <div style="border: 1px solid green; margin-left:300px; padding:5px; border-radius: 5px;">
+          <span class="fas fa-cart-plus" style="font-size:30px; color:green; opacity:0.7; margin-right:5px">
+
+            <!-- <span  style="color: red; position:absolute; top:-5px; left:20px; font-size:15px">1</span> -->
+          </span>
+          <span style="font-size:16px; position:relative; top:-5px; color:green; margin-right:10px">giỏ hàng</span>
+          <span style=" position:relative; top:-4px; margin-right:10px; color:red">0</span>
+        </div>
       </form>
     </div>
   </div>
