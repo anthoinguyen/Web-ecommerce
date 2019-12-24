@@ -88,6 +88,8 @@ class ProductP
       </div>
       </div>
       </div>
+      </div>
+      </div>
       <br>
       </div>
       DELIMITER;
@@ -236,11 +238,76 @@ class ProductP
       $count++;
     }
   }
+  public function SetStyleForCurrentPage($c)
+  {
+    $group_id = $this->GetPagesOfSearch();
+    $style = "";
+    if ($c == $group_id)
+      $style = "style='color:red'";
+    return $style;
+  }
+  public function GetPagesOfSearch()
+  {
+    if (!isset($_GET['pages'])) {
+      $pages = 1;
+    } else {
+      $pages = $_GET['pages'];
+    }
+    return $pages;
+  }
+  public function GetKeyOfSearch()
+  {
+    if (!isset($_GET['key'])) {
+      $key = null;
+    } else {
+      $key = $_GET['key'];
+    }
+    return $key;
+  }
+  public function BuildLinksOfSearch()
+  {
+    $pb = new productB();
+    $current_key = $this->GetKeyOfSearch();
+    $current_group = $this->GetPagesOfSearch();
 
-  // public function VarForProductName($cat_id, $page_id, $product_name, $count)
-  // {
-  //   $session_name = $cat_id . "_" . $page_id . "_" . "name" . "_" . $count;
-  //   $_SESSION["$session_name"] = $product_name;
-  // }
+    $num = $pb->CalculateNumberOfLinksOfSearch($current_key);
+    
+    $previou = $current_group - 1;
+    $previou_disable = $previou > 0 ? "" : "disable";
+    $next = $current_group + 1;
+    $next_disable = $next <= $num ? "" : "disable";
+    $c = 1;
+    if ($num > 1) {
+      echo "<li class='page-item'><a class='page-link' " . $previou_disable .  "href='search.php?key={$current_key}&pages={$previou}'>Previous</a></li>";
+    }
+    for ($x = 1; $x <= $num; $x++) {
+      $link = <<<DELIMITER
+        <li class="page-item"><a class="page-link" {$this->SetStyleForCurrentPage($c)} href="search.php?key={$current_key}&pages={$x}">{$x}</a></li>
+        DELIMITER;
+      echo $link;
+      $c++;
+    }
+    if ($num > 1) {
+      echo "<li class='page-item'><a class='page-link' " .  $next_disable . "href='search.php?key={$current_key}&pages={$next}'>Next</a></li>";
+    }
+  }
+  public function ShowProductBySearchKey()
+  {
+    $pb = new ProductB();
+    $key = $this->GetKeyOfSearch();
+    if (!$key) {
+      echo "Please search with key!";
+      return;
+    }
+    $page = $this->GetPagesOfSearch();
+    $result = $pb->GetProductsBySearch($key, $page);
+    if (!$result) {
+      echo "NOT FOUND";
+      return;
+    }
+    while ($row = mysqli_fetch_array($result)) {
+      $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id'], $row['product_image'], $row['new_price']);
+    }
+  }
 }
 ?>

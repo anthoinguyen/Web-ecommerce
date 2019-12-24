@@ -7,7 +7,6 @@ if(isset($_POST['search'])){
 }
 ?>
 <!DOCTYPE html>
-<?php session_start(); ?>
 <html lang="en">
 
 <head>
@@ -15,22 +14,15 @@ if(isset($_POST['search'])){
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Ecommerce</title>
-  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <style>
-    .right-20:hover {
-      color: white;
-      background-color: rgba(128, 128, 128, 0.3);
-    }
-  </style>
 </head>
 
-<body style="font-family: 'Roboto', sans-serif;">
+<body>
   <!-- Navbar -->
   <div class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/">An Thới</a>
+    <a class="navbar-brand" href="index.php">An Thới</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -86,12 +78,18 @@ if(isset($_POST['search'])){
         </div>
       </div>
       <div class="col-sm-9">
-        <h3 style="text-align: center">List of products</h3>
-        <div class="row">
+        <h3>Search for "
           <?php
           include "presentation/productP.php";
           $pp = new ProductP();
-          $pp->ShowProductByUser();
+          $key = $pp->GetKeyOfSearch();
+          if($key) {
+            echo $key;
+          } ?>"
+        </h3>
+        <div class="row">
+          <?php
+          $pp->ShowProductBySearchKey();
           ?>
         </div>
       </div>
@@ -99,7 +97,7 @@ if(isset($_POST['search'])){
         <ul class="pagination">
           <!-- <li class="page-item"><a class="page-link" href="#">Previous</a></li> -->
           <?php
-          $cp->BuildLinks();
+          $pp->BuildLinksOfSearch();
           ?>
           <!-- <li class="page-item"><a class="page-link" href="#">Next</a></li> -->
         </ul>
@@ -191,4 +189,5 @@ if(isset($_POST['search'])){
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
+
 </html>
