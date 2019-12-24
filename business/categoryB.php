@@ -30,7 +30,6 @@ class CategoryB
     $session_name = "numPages_" . $cat_id;
     if (isset($_SESSION["{$session_name}"])) {
       $result = $_SESSION["{$session_name}"];
-      echo $session_name;
       return $result;
     }
     $num = $this->GetAmountOfProductInCategory($cat_id);

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<?php session_start();?>
 <html lang="en">
 
 <head>
@@ -7,12 +8,13 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Ecommerce</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 </head>
 
 <body>
   <!-- Navbar -->
   <div class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">An Thới</a>
+    <a class="navbar-brand" href="/">An Thới</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -70,7 +72,7 @@
           ?>
         </div>
       </div>
-      <nav aria-label="Page navigation example">
+      <nav aria-label="Page navigation example" style="display:inline; margin-left:77%">
         <ul class="pagination">
           <!-- <li class="page-item"><a class="page-link" href="#">Previous</a></li> -->
           <?php
@@ -159,7 +161,7 @@
         </div>
       </div>
     </div>
-    <div class="footer-copyright text-center py-3">© 2018 Copyright: UIT - AnThoi
+    <div class="footer-copyright text-center py-3">© 2019 Copyright: UIT - AnThoi
     </div>
   </footer>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

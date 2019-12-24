@@ -2,18 +2,20 @@
 
 <?php
 $from = "2019-08-01";
-$to = "2019-10-31";
-$product_name = "Samsung Galaxy A50";
+$to = "2019-12-23";
+//$product_name = "Xiaomi Mi 9T";
 //$test = new ProductAnalysisB();
+
 //$return_list = $test->GetRelevantLinks($product_name);
 //$test->BuildUpDataset($product_name, $return_list);
-$link = "https://www.thegioididong.com/dtdd/iphone-x-64gb";
+//$link = "https://www.thegioididong.com/dtdd/iphone-x-64gb";
 //$test->CheckRuleMatchLink($link, $type, $rule);
 //$test->TrainRule($product_name);
 //$test->GetUnfriendlyLinks($product_name);
 //$test->GetPrice($raw);
-//$test->SearchCompetitivePrice($product_name);
 
+//$test->TrainRule($product_name);
+//$test->SearchCompetitivePrice($product_name);
 
 class ProductAnalysisB
 {
@@ -25,10 +27,11 @@ class ProductAnalysisB
     $price = 0;
 
     // 1.Look at dataset and get min price
-    $price = $this->GetMinPrice($product_name);
-    if ($price > 0) {
-      return $price;
-    }
+    // $price = $this->GetMinPrice($product_name);
+    // if ($price > 0) {
+    //   $this->UpdateMinPriceInProduct($product_name,$price);
+    //   return $price;
+    // }
 
     // 2.Generate link
     $return_list = $this->GetRelevantLinks($product_name);
@@ -55,6 +58,21 @@ class ProductAnalysisB
       }
       echo "MIN PRICE" . $min_price . '<br>';
     }
+
+    $price = $this->GetMinPrice($product_name);
+    if ($price > 0) {
+      $this->UpdateMinPriceInProduct($product_name,$price);
+      return $price*0.95;
+    }
+  }
+
+  public function UpdateMinPriceInProduct($product_name,$price)
+  {
+    $PRO = "'" . $product_name . "'";
+    $new_price = $price * 0.95;
+    $sql = "UPDATE `Product` SET `new_price` = {$new_price} WHERE product_name = {$PRO}";
+    $db = new Database();
+    $db->insert($sql);
   }
 
   public function GetRelevantLinks($product_name)
@@ -149,11 +167,11 @@ class ProductAnalysisB
       //echo $element->tag . '<br>';
       //echo $id;
       $pt2 = $element->plaintext . '<br>';
-      echo $pt2 . '<br>';
+      //echo $pt2 . '<br>';
       $check_price = $this->GetPrice($pt2);
       $flag = $this->CheckPrice($check_price);
       if ($flag == 1) {
-        echo $check_price . '<br>';
+        //echo $check_price . '<br>';
         $this->UpdatePriceInDataset($link, $check_price);
         return $check_price;
       }
@@ -170,11 +188,11 @@ class ProductAnalysisB
       //echo $element->tag . '<br>';
       //echo $class;
       $pt1 = $element->plaintext . '<br>';
-      echo $pt1 . '<br>';
+      //echo $pt1 . '<br>';
       $check_price = $this->GetPrice($pt1);
       $flag = $this->CheckPrice($check_price);
       if ($flag == 1) {
-        echo $check_price . '<br>';
+        //echo $check_price . '<br>';
         $this->UpdatePriceInDataset($link, $check_price);
         return $check_price;
       }
@@ -222,7 +240,7 @@ class ProductAnalysisB
 
   public function CheckPrice($check_price)
   {
-    $base_price = 6700000;
+    $base_price = 8000000;
     $num = $base_price - $check_price;
 
     if ($num < 0) {
@@ -351,7 +369,7 @@ class ProductAnalysisB
       // 1.Get link is not in dataset
       $test = $this->CheckLinkInDataset($x_value);
 
-      set_error_handle(function () { });
+      set_error_handler(function () { });
       $test1 = $this->TestLink($x_value);
       restore_error_handler();
 
@@ -415,8 +433,8 @@ class ProductAnalysisB
     $db = new Database();
     $result = $db->select($sql);
     $row = mysqli_fetch_array($result);
-    echo $row['NUM'];
-    // return $result;
+    // echo $row['NUM'];
+    return  $row['NUM'];
   }
 
   public function UpdateViewOfProduct($product_id)
