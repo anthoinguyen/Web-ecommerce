@@ -7,7 +7,6 @@ if(isset($_POST['search'])){
 }
 ?>
 <!DOCTYPE html>
-<?php session_start(); ?>
 <html lang="en">
 
 <head>
@@ -23,7 +22,7 @@ if(isset($_POST['search'])){
 <body>
   <!-- Navbar -->
   <div class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/">An Thới</a>
+    <a class="navbar-brand" href="index.php">An Thới</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -73,12 +72,18 @@ if(isset($_POST['search'])){
         </div>
       </div>
       <div class="col-sm-9">
-        <h3>List of products</h3>
-        <div class="row">
+        <h3>Search for "
           <?php
           include "presentation/productP.php";
           $pp = new ProductP();
-          $pp->ShowProductByUser();
+          $key = $pp->GetKeyOfSearch();
+          if($key) {
+            echo $key;
+          } ?>"
+        </h3>
+        <div class="row">
+          <?php
+          $pp->ShowProductBySearchKey();
           ?>
         </div>
       </div>
@@ -86,7 +91,7 @@ if(isset($_POST['search'])){
         <ul class="pagination">
           <!-- <li class="page-item"><a class="page-link" href="#">Previous</a></li> -->
           <?php
-          $cp->BuildLinks();
+          $pp->BuildLinksOfSearch();
           ?>
           <!-- <li class="page-item"><a class="page-link" href="#">Next</a></li> -->
         </ul>
@@ -178,4 +183,5 @@ if(isset($_POST['search'])){
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
+
 </html>

@@ -438,7 +438,8 @@ CREATE TABLE `product` (
   `product_price` float NOT NULL,
   `new_price` float DEFAULT NULL,
   `cat_id` int(11) NOT NULL,
-  `product_image` varchar(255) NOT NULL
+  `product_image` varchar(255) NOT NULL,
+  FULLTEXT(`product_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

@@ -3,7 +3,7 @@
 class CategoryB
 {
   private $cat_list = null;
-  private $MAX_PRODUCT = 3;
+  private $MAX_PRODUCT = 6;
 
   public function GetAllCategories()
   {
