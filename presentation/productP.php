@@ -192,7 +192,7 @@ class ProductP
       for ($i = 0; $i < 3; $i++) {
         if (isset($_SESSION["{$session_name}"][$i])) {
           $row = $_SESSION["{$session_name}"][$i];
-          echo "have session";
+          // echo "have session";
           $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id'], $row['product_image'], $row['new_price']);
         }
       }
@@ -211,16 +211,10 @@ class ProductP
         "product_id" => $row['product_id'],
         "new_price" => $row['new_price']
       );
-      echo "haven't session";
+      // echo "haven't session";
       $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id'], $row['product_image'], $row['new_price']);
       $count++;
     }
   }
-
-  // public function VarForProductName($cat_id, $page_id, $product_name, $count)
-  // {
-  //   $session_name = $cat_id . "_" . $page_id . "_" . "name" . "_" . $count;
-  //   $_SESSION["$session_name"] = $product_name;
-  // }
 }
 ?>
