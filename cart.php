@@ -5,6 +5,13 @@ if (isset($_POST['search'])) {
         header("Location:search.php?key=${key}&pages=1");
     }
 }
+
+function convertCurrency($amount, $from, $to){
+    $data = file_get_contents("https://www.google.com/finance/converter?a=$amount&from=$from&to=$to");
+    preg_match("/<span class=bld>(.*)<\/span>/",$data, $converted);
+    $converted = preg_replace("/[^0-9.]/", "", $converted[1]);
+    return number_format(round($converted, 3),2);
+}
 ?>
 <!DOCTYPE html>
 <?php session_start(); ?>
@@ -14,6 +21,8 @@ if (isset($_POST['search'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Ensures optimal rendering on mobile devices. -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <!-- Optimal Internet Explorer compatibility -->
     <title>Ecommerce</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -35,16 +44,19 @@ if (isset($_POST['search'])) {
 </head>
 
 <body style="font-family: 'Roboto', sans-serif;">
+    <script
+    src="https://www.paypal.com/sdk/js?client-id=AZ23DqM9n7Lu7fXJkfHpwjsaCmnlTQlgp7Hr3X3pjYDwW80gsn7w6c3S08I_tnr-U1jv8QlAIKZoOR3F"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
+    </script>
     <!-- Navbar -->
     <div class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">An Thới</a>
+        <a class="navbar-brand" href="index.php">Group P2T2H</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">About</a>
@@ -102,46 +114,31 @@ if (isset($_POST['search'])) {
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <?php 
+                                            $totalOrder = 0;
+                                            $session_name = array_keys($_SESSION['cart']);
+                                            for($i = 0; $i < count($_SESSION['cart']); $i++){
+                                                $name = $_SESSION['cart'][$session_name[$i]]['product_name'];
+                                                $image = $_SESSION['cart'][$session_name[$i]]['product_image'];
+                                                $count = $_SESSION['cart'][$session_name[$i]]['count'];
+                                                $price = $_SESSION['cart'][$session_name[$i]]['product_price'];
+                                                $total = $price*$count;
+                                                $totalOrder += $total;
+                                        ?>
                                         <tr>
                                             <th scope="row" class="border-0">
                                                 <div class="p-2">
-                                                    <img src="https://res.cloudinary.com/mhmd/image/upload/v1556670479/product-1_zrifhn.jpg" alt="" width="70" class="img-fluid rounded shadow-sm">
+                                                    <img src="<?php echo $image; ?>" alt="" width="70" class="img-fluid rounded shadow-sm">
                                                     <div class="ml-3 d-inline-block align-middle">
-                                                        <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block align-middle">Timex Unisex Originals</a></h5><span class="text-muted font-weight-normal font-italic d-block">Category: Watches</span>
+                                                        <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block align-middle"><?php echo $name; ?></a></h5>
                                                     </div>
                                                 </div>
                                             </th>
-                                            <td class="border-0 align-middle"><strong>$79.00</strong></td>
-                                            <td class="border-0 align-middle"><strong>3</strong></td>
-                                            <td class="border-0 align-middle"><strong>0</strong></td>
+                                            <td class="border-0 align-middle"><strong><?php echo number_format($price)." ₫"; ?></strong></td>
+                                            <td class="border-0 align-middle"><strong><?php echo $count; ?></strong></td>
+                                            <td class="border-0 align-middle"><strong><?php echo number_format($total)." ₫"; ?></strong></td>
                                         </tr>
-                                        <tr>
-                                            <th scope="row">
-                                                <div class="p-2">
-                                                    <img src="https://res.cloudinary.com/mhmd/image/upload/v1556670479/product-3_cexmhn.jpg" alt="" width="70" class="img-fluid rounded shadow-sm">
-                                                    <div class="ml-3 d-inline-block align-middle">
-                                                        <h5 class="mb-0"><a href="#" class="text-dark d-inline-block">Lumix camera lense</a></h5><span class="text-muted font-weight-normal font-italic">Category: Electronics</span>
-                                                    </div>
-                                                </div>
-                                            </th>
-                                            <td class="align-middle"><strong>$79.00</strong></td>
-                                            <td class="align-middle"><strong>3</strong></td>
-                                            <td class="align-middle"><strong>0</strong></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">
-                                                <div class="p-2">
-                                                    <img src="https://res.cloudinary.com/mhmd/image/upload/v1556670479/product-2_qxjis2.jpg" alt="" width="70" class="img-fluid rounded shadow-sm">
-                                                    <div class="ml-3 d-inline-block align-middle">
-                                                        <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block">Gray Nike running shoe</a></h5><span class="text-muted font-weight-normal font-italic">Category: Fashion</span>
-                                                    </div>
-                                                </div>
-                                            <td class="align-middle"><strong>$79.00</strong></td>
-                                            <td class="align-middle"><strong>3</strong></td>
-                                            <td class="align-middle"><strong>0</strong></i></a>
-                                            </td>
-                                        </tr>
+                                        <?php } ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -180,13 +177,13 @@ if (isset($_POST['search'])) {
                             <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Order summary </div>
                             <div class="p-4">
                                 <ul class="list-unstyled mb-4">
-                                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Order Subtotal </strong><strong>$390.00</strong></li>
-                                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Shipping and handling</strong><strong>$10.00</strong></li>
-                                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Tax</strong><strong>$0.00</strong></li>
+                                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Order Subtotal </strong><strong><?php echo number_format($totalOrder)." ₫"; ?></strong></li>
+                                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Shipping and handling</strong><strong>0 ₫</strong></li>
+                                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Tax</strong><strong>0 ₫</strong></li>
                                     <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total</strong>
-                                        <h5 class="font-weight-bold">$400.00</h5>
+                                        <h5 class="font-weight-bold"><?php echo "$".$totalOrder*0.000043; ?></h5>
                                     </li>
-                                </ul><a href="#" class="btn btn-primary rounded-pill py-2 btn-block">Procceed to checkout</a>
+                                </ul><div id="paypal-button-container"></div>
                             </div>
                         </div>
                     </div>
@@ -195,6 +192,44 @@ if (isset($_POST['search'])) {
             </div>
         </div>
     </div>
+
+    <!-- paypal -->
+    
+
+      <!-- <script>
+        paypal.Buttons().render('body');
+        // This function displays Smart Payment Buttons on your web page.
+      </script> -->
+
+      <script>
+        var values = "<?php echo $totalOrder*0.000043; ?>";
+          paypal.Buttons({
+            createOrder: function(data, actions) {
+              return actions.order.create({
+                purchase_units: [{
+                  amount: {
+                    value: values
+                  }
+                }]
+              });
+            },
+            onApprove: function(data, actions) {
+              return actions.order.capture().then(function(details) {
+                alert('Transaction completed by ' + details.payer.name.given_name);
+                // Call your server to save the transaction
+                return fetch('/paypal-transaction-complete', {
+                  method: 'post',
+                  headers: {
+                    'content-type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    orderID: data.orderID
+                  })
+                });
+              });
+            }
+          }).render('#paypal-button-container');
+    </script>
     <!-- Footer -->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

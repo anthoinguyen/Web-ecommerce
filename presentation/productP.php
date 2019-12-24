@@ -78,7 +78,7 @@ class ProductP
       <div class="card-body">
         <h5 class="card-title" style="font-size:22px">{$name}</h5>
         <p class="card-text" style="color:red">{$price} <span style="font-weight:bold; font-size: 17px">₫</span></p>
-        <a href="action.php?type=addToCart&id={$product_id}&name={$name}&price={$new_price1}&image={$image}" class="btn btn-primary">Add to card</a>
+        <a href="action.php?type=addToCart&id={$product_id}&name={$name}&price={$price1}&image={$image}" class="btn btn-primary">Add to card</a>
       </div>
       </div>
       </div>
@@ -107,7 +107,7 @@ class ProductP
     $view = $getview ? $getview : 0;
     $price = number_format($price1);
     if ($new_price1 != null) {
-      $new_price = number_format($new_price1);
+      $new_price = number_format($new_price1);  
       $product = <<<DELIMITER
       <div class="col-sm-4">
       <div class="card">
@@ -135,7 +135,7 @@ class ProductP
       <div class="card-body">
         <h5 class="card-title" style="font-size:16px">{$name}</h5>
         <p class="card-text" style="color:red">{$price} <span style="font-size:17px">₫</span></p>
-        <a href="action.php?type=addToCart&id={$id}&name={$name}&price={$new_price1}&image={$image}&category={$cat_id}&pages={$product_group}" class="btn btn-primary">Add to card</a>
+        <a href="action.php?type=addToCart&id={$id}&name={$name}&price={$price1}&image={$image}&category={$cat_id}&pages={$product_group}" class="btn btn-primary">Add to card</a>
         <p class="card-text" style="display:inline; margin-left:40px;font-size:12px"> <i class="fas fa-eye" style="margin-right:3px"></i>{$view}</p>
       </div>
       </div>
