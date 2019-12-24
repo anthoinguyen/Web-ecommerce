@@ -65,8 +65,12 @@ if(isset($_POST['search'])){
 
             <!-- <span  style="color: red; position:absolute; top:-5px; left:20px; font-size:15px">1</span> -->
           </span>
-          <span style="font-size:16px; position:relative; top:-5px; color:green; margin-right:10px">giỏ hàng</span>
-          <span style=" position:relative; top:-4px; margin-right:10px; color:red">0</span>
+          <span style="font-size:16px; position:relative; top:-5px; color:green; margin-right:10px">Cart</span>
+          <span style=" position:relative; top:-4px; margin-right:10px; color:red">
+            <?php 
+              echo isset($_SESSION['cart'])? 
+                count($_SESSION['cart']):0;
+            ?></span>
         </button>
       </form>
     </div>

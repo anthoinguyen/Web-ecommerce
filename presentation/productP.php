@@ -39,13 +39,8 @@ class ProductP
 
   public function ShowSingleProduct($name, $price1, $image, $new_price1)
   {
-
-    $card = new CardB();
     if (isset($_GET['product_id'])) {
         $product_id = $_GET['product_id'];
-    }
-    if (isset($_GET['add'])) {
-        $card->AddToCard($name, $new_price1, $image);
     }
 
     $price = number_format($price1);
@@ -63,7 +58,7 @@ class ProductP
         <h5 class="card-title" style="font-size:22px">{$name}</h5>
         <p class="card-text" style="text-decoration:line-through; font-size:12px; margin-bottom:5px">{$price} <span style="font-size: 15px">₫</span></p>
         <p class="card-text" style="color:red">{$new_price} <span style="font-weight:bold; font-size: 17px">₫</span></p>
-        <a href="item.php?product_id={$product_id}&add=true" class="btn btn-primary">Add to card</a>
+        <a href="action.php?type=addToCart&id={$product_id}&name={$name}&price={$new_price1}&image={$image}" class="btn btn-primary">Add to card</a>
       </div>
       </div>  
       </div>
@@ -83,7 +78,7 @@ class ProductP
       <div class="card-body">
         <h5 class="card-title" style="font-size:22px">{$name}</h5>
         <p class="card-text" style="color:red">{$price} <span style="font-weight:bold; font-size: 17px">₫</span></p>
-        <a href="item.php?product_id={$product_id}&add=true" class="btn btn-primary">Add to card</a>
+        <a href="action.php?type=addToCart&id={$product_id}&name={$name}&price={$new_price1}&image={$image}" class="btn btn-primary">Add to card</a>
       </div>
       </div>
       </div>
@@ -103,12 +98,6 @@ class ProductP
     $cat_id = $cp->GetCategory();
     $product_group = $cp->GetPages();
 
-    $card = new CardB();
-    if (isset($_GET['add']) && isset($_GET['id'])) {
-        if($_GET['id'] == $id){
-          $card->AddToCard($name, $new_price1, $image);
-        }
-    }
 
 
     $from = "2019-08-01";
@@ -129,7 +118,7 @@ class ProductP
         <h5 class="card-title" style="font-size:16px">{$name}</h5>
         <p class="card-text" style="color:red; display:inline-block; margin-right:10px">{$new_price} <span style="font-size:17px">₫</span></p>
         <p class="card-text" style="text-decoration:line-through; font-size:12px; margin-bottom:5px; display:inline-block">{$price} <span style="font-size: 15px">₫</span></p>
-        <a href="index.php?category={$cat_id}&pages={$product_group}&add=true&id={$id}" class="btn btn-primary">Add to card</a>
+        <a href="action.php?type=addToCart&id={$id}&name={$name}&price={$new_price1}&image={$image}&category={$cat_id}&pages={$product_group}" class="btn btn-primary">Add to card</a>
         <p class="card-text" style="display:inline; margin-left:40px;font-size:12px"> <i class="fas fa-eye" style="margin-right:3px"></i>{$view}</p>
       </div>
       </div>
@@ -146,7 +135,7 @@ class ProductP
       <div class="card-body">
         <h5 class="card-title" style="font-size:16px">{$name}</h5>
         <p class="card-text" style="color:red">{$price} <span style="font-size:17px">₫</span></p>
-        <a href="index.php?category={$cat_id}&pages={$product_group}&add=true&id={$id}" class="btn btn-primary">Add to card</a>
+        <a href="action.php?type=addToCart&id={$id}&name={$name}&price={$new_price1}&image={$image}&category={$cat_id}&pages={$product_group}" class="btn btn-primary">Add to card</a>
         <p class="card-text" style="display:inline; margin-left:40px;font-size:12px"> <i class="fas fa-eye" style="margin-right:3px"></i>{$view}</p>
       </div>
       </div>
