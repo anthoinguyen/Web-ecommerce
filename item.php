@@ -10,6 +10,12 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    .right-20:hover {
+      color: white;
+      background-color: rgba(128, 128, 128, 0.3);
+    }
+  </style>
 </head>
 
 <body  style="font-family: 'Roboto', sans-serif;">
@@ -44,13 +50,14 @@
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <input style="width:460px" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        <div style="border: 1px solid green; margin-left:300px; padding:5px; border-radius: 5px;">
-          <span class="fas fa-cart-plus" style="font-size:30px; color:green; opacity:0.7; margin-right:5px"></span>
+        <button class="right-20" style="border: 1px solid green; margin-left:100px; padding:5px; border-radius: 5px;">
+          <span class="fas fa-cart-plus" style="font-size:30px; color:green; opacity:0.7; margin-right:5px">
+          </span>
           <span style="font-size:16px; position:relative; top:-5px; color:green; margin-right:10px">giỏ hàng</span>
           <span style=" position:relative; top:-4px; margin-right:10px; color:red">0</span>
-        </div>
+        </button>
       </form>
     </div>
   </div>
