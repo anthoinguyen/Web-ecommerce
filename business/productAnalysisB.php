@@ -61,12 +61,12 @@ class ProductAnalysisB
 
     $price = $this->GetMinPrice($product_name);
     if ($price > 0) {
-      $this->UpdateMinPriceInProduct($product_name,$price);
-      return $price*0.95;
+      $this->UpdateMinPriceInProduct($product_name, $price);
+      return $price * 0.95;
     }
   }
 
-  public function UpdateMinPriceInProduct($product_name,$price)
+  public function UpdateMinPriceInProduct($product_name, $price)
   {
     $PRO = "'" . $product_name . "'";
     $new_price = $price * 0.95;
@@ -369,7 +369,8 @@ class ProductAnalysisB
       // 1.Get link is not in dataset
       $test = $this->CheckLinkInDataset($x_value);
 
-      set_error_handler(function () { });
+      set_error_handler(function () {
+      });
       $test1 = $this->TestLink($x_value);
       restore_error_handler();
 

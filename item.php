@@ -1,13 +1,13 @@
 <?php
-if(isset($_POST['search'])){
+if (isset($_POST['search'])) {
   $key = $_POST['key'];
-  if($key && $key != ""){
-  header("Location:search.php?key=${key}&pages=1");
+  if ($key && $key != "") {
+    header("Location:search.php?key=${key}&pages=1");
   }
 }
 ?>
 <!DOCTYPE html>
-<?php session_start();?>
+<?php session_start(); ?>
 <html lang="en">
 
 <head>
@@ -27,7 +27,7 @@ if(isset($_POST['search'])){
   </style>
 </head>
 
-<body  style="font-family: 'Roboto', sans-serif;">
+<body style="font-family: 'Roboto', sans-serif;">
   <!-- Navbar -->
   <div class="navbar navbar-expand-lg navbar-light bg-light" style="margin-bottom:15px">
     <a class="navbar-brand" href="#">Group P2T2H</a>
@@ -60,16 +60,17 @@ if(isset($_POST['search'])){
       </ul>
       <form class="form-inline my-2 my-lg-0" method="POST" action="">
         <input style="width:460px" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="key">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name = "search">Search</button>
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="search">Search</button>
         <a href="cart.php" role="button" class="right-20" style="border: 1px solid green; margin-left:100px; padding:5px; border-radius: 5px;">
           <span class="fas fa-cart-plus" style="font-size:30px; color:green; opacity:0.7; margin-right:5px">
 
             <!-- <span  style="color: red; position:absolute; top:-5px; left:20px; font-size:15px">1</span> -->
           </span>
           <span style="font-size:16px; position:relative; top:-5px; color:green; margin-right:10px">Cart</span>
-          <span style=" position:relative; top:-4px; margin-right:10px; color:red"><?php 
-              echo isset($_SESSION['cart'])? 
-                count($_SESSION['cart']):0;
+          <span style=" position:relative; top:-4px; margin-right:10px; color:red">
+            <?php
+            echo isset($_SESSION['cart']) ?
+              count($_SESSION['cart']) : 0;
             ?></span>
         </a>
       </form>
