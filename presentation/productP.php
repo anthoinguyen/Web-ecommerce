@@ -40,7 +40,7 @@ class ProductP
   public function ShowSingleProduct($name, $price1, $image, $new_price1)
   {
     if (isset($_GET['product_id'])) {
-        $product_id = $_GET['product_id'];
+      $product_id = $_GET['product_id'];
     }
 
     $price = number_format($price1);
@@ -98,8 +98,6 @@ class ProductP
     $cat_id = $cp->GetCategory();
     $product_group = $cp->GetPages();
 
-
-
     $from = "2019-08-01";
     $to = "2019-12-25";
     $pad = new ProductAnalysisB();
@@ -107,7 +105,7 @@ class ProductP
     $view = $getview ? $getview : 0;
     $price = number_format($price1);
     if ($new_price1 != null) {
-      $new_price = number_format($new_price1);  
+      $new_price = number_format($new_price1);
       $product = <<<DELIMITER
       <div class="col-sm-4">
       <div class="card">
@@ -211,7 +209,6 @@ class ProductP
       return;
     }
 
-
     $cb = new CategoryB();
     $result = $cb->GetProductInGroup($cat_id, $page_id);
     $count = 0;
@@ -227,6 +224,7 @@ class ProductP
       $count++;
     }
   }
+
   public function SetStyleForCurrentPage($c)
   {
     $group_id = $this->GetPagesOfSearch();
@@ -235,6 +233,7 @@ class ProductP
       $style = "style='color:red'";
     return $style;
   }
+
   public function GetPagesOfSearch()
   {
     if (!isset($_GET['pages'])) {
@@ -244,6 +243,7 @@ class ProductP
     }
     return $pages;
   }
+
   public function GetKeyOfSearch()
   {
     if (!isset($_GET['key'])) {
@@ -253,6 +253,7 @@ class ProductP
     }
     return $key;
   }
+
   public function BuildLinksOfSearch()
   {
     $pb = new productB();
@@ -260,7 +261,7 @@ class ProductP
     $current_group = $this->GetPagesOfSearch();
 
     $num = $pb->CalculateNumberOfLinksOfSearch($current_key);
-    
+
     $previou = $current_group - 1;
     $previou_disable = $previou > 0 ? "" : "disable";
     $next = $current_group + 1;
@@ -280,6 +281,7 @@ class ProductP
       echo "<li class='page-item'><a class='page-link' " .  $next_disable . "href='search.php?key={$current_key}&pages={$next}'>Next</a></li>";
     }
   }
+  
   public function ShowProductBySearchKey()
   {
     $pb = new ProductB();

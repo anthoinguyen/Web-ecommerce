@@ -1,8 +1,8 @@
 <?php
-if(isset($_POST['search'])){
+if (isset($_POST['search'])) {
   $key = $_POST['key'];
-  if($key && $key != ""){
-  header("Location:search.php?key=${key}&pages=1");
+  if ($key && $key != "") {
+    header("Location:search.php?key=${key}&pages=1");
   }
 }
 ?>
@@ -51,7 +51,7 @@ if(isset($_POST['search'])){
       </ul>
       <form class="form-inline my-2 my-lg-0" method="POST" action="">
         <input style="width:460px" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="key">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name = "search">Search</button>
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="search">Search</button>
         <button class="right-20" style="border: 1px solid green; margin-left:100px; padding:5px; border-radius: 5px;">
           <span class="fas fa-cart-plus" style="font-size:30px; color:green; opacity:0.7; margin-right:5px">
 
@@ -83,7 +83,7 @@ if(isset($_POST['search'])){
           include "presentation/productP.php";
           $pp = new ProductP();
           $key = $pp->GetKeyOfSearch();
-          if($key) {
+          if ($key) {
             echo $key;
           } ?>"
         </h3>

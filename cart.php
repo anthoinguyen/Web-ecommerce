@@ -1,17 +1,18 @@
 <?php include "data/database.php" ?>
 <?php
 if (isset($_POST['search'])) {
-    $key = $_POST['key'];
-    if ($key && $key != "") {
-        header("Location:search.php?key=${key}&pages=1");
-    }
+  $key = $_POST['key'];
+  if ($key && $key != "") {
+    header("Location:search.php?key=${key}&pages=1");
+  }
 }
 
-function convertCurrency($amount, $from, $to){
-    $data = file_get_contents("https://www.google.com/finance/converter?a=$amount&from=$from&to=$to");
-    preg_match("/<span class=bld>(.*)<\/span>/",$data, $converted);
-    $converted = preg_replace("/[^0-9.]/", "", $converted[1]);
-    return number_format(round($converted, 3),2);
+function convertCurrency($amount, $from, $to)
+{
+  $data = file_get_contents("https://www.google.com/finance/converter?a=$amount&from=$from&to=$to");
+  preg_match("/<span class=bld>(.*)<\/span>/", $data, $converted);
+  $converted = preg_replace("/[^0-9.]/", "", $converted[1]);
+  return number_format(round($converted, 3), 2);
 }
 
 function checkout($product_id, $count){
@@ -32,69 +33,69 @@ function checkout($product_id, $count){
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Ensures optimal rendering on mobile devices. -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <!-- Optimal Internet Explorer compatibility -->
-    <title>Ecommerce</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        .right-20:hover {
-            color: white;
-            background-color: rgba(128, 128, 128, 0.3);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Ensures optimal rendering on mobile devices. -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <!-- Optimal Internet Explorer compatibility -->
+  <title>Ecommerce</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    .right-20:hover {
+      color: white;
+      background-color: rgba(128, 128, 128, 0.3);
+    }
 
-        body {
-            background: #eecda3;
-            background: -webkit-linear-gradient(to right, #eecda3, #ef629f);
-            background: linear-gradient(to right, #eecda3, #ef629f);
-            min-height: 100vh;
-        }
-    </style>
+    body {
+      background: #eecda3;
+      background: -webkit-linear-gradient(to right, #eecda3, #ef629f);
+      background: linear-gradient(to right, #eecda3, #ef629f);
+      min-height: 100vh;
+    }
+  </style>
 </head>
 
 <body style="font-family: 'Roboto', sans-serif;">
-    <script
-    src="https://www.paypal.com/sdk/js?client-id=AZ23DqM9n7Lu7fXJkfHpwjsaCmnlTQlgp7Hr3X3pjYDwW80gsn7w6c3S08I_tnr-U1jv8QlAIKZoOR3F"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
-    </script>
-    <!-- Navbar -->
-    <div class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="index.php">Group P2T2H</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Service
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                </li>
-            </ul>
+  <script src="https://www.paypal.com/sdk/js?client-id=AZ23DqM9n7Lu7fXJkfHpwjsaCmnlTQlgp7Hr3X3pjYDwW80gsn7w6c3S08I_tnr-U1jv8QlAIKZoOR3F">
+    // Required. Replace SB_CLIENT_ID with your sandbox client ID.
+  </script>
+  <!-- Navbar -->
+  <div class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="index.php">Group P2T2H</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">About</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Service
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contact</a>
+        </li>
+      </ul>
 
-        </div>
     </div>
-    <!-- Main -->
-    <div class="body">
+  </div>
+  <!-- Main -->
+  <div class="body">
 
         <div class="px-4 px-lg-0">
             <!-- For demo purpose -->
@@ -210,57 +211,58 @@ function checkout($product_id, $count){
                                         <h5 class="font-weight-bold"><?php echo "$".$totalOrder*0.000043; ?></h5>
                                     </li>
                                 </ul><div id="paypal-button-container"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+                            
+              </div>
             </div>
+          </div>
+
         </div>
+      </div>
     </div>
+  </div>
 
-    <!-- paypal -->
-    
+  <!-- paypal -->
 
-      <!-- <script>
+
+  <!-- <script>
         paypal.Buttons().render('body');
         // This function displays Smart Payment Buttons on your web page.
       </script> -->
 
-      <script>
-        var values = "<?php echo $totalOrder*0.000043; ?>";
-          paypal.Buttons({
-            createOrder: function(data, actions) {
-              return actions.order.create({
-                purchase_units: [{
-                  amount: {
-                    value: values
-                  }
-                }]
-              });
-            },
-            onApprove: function(data, actions) {
-              return actions.order.capture().then(function(details) {
-                alert('Transaction completed by ' + details.payer.name.given_name);
-                // Call your server to save the transaction
-                return fetch('/paypal-transaction-complete', {
-                  method: 'post',
-                  headers: {
-                    'content-type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                    orderID: data.orderID
-                  })
-                });
-              });
+  <script>
+    var values = "<?php echo $totalOrder * 0.000043; ?>";
+    paypal.Buttons({
+      createOrder: function(data, actions) {
+        return actions.order.create({
+          purchase_units: [{
+            amount: {
+              value: values
             }
-          }).render('#paypal-button-container');
-    </script>
-    <!-- Footer -->
+          }]
+        });
+      },
+      onApprove: function(data, actions) {
+        return actions.order.capture().then(function(details) {
+          alert('Transaction completed by ' + details.payer.name.given_name);
+          // Call your server to save the transaction
+          return fetch('/paypal-transaction-complete', {
+            method: 'post',
+            headers: {
+              'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+              orderID: data.orderID
+            })
+          });
+        });
+      }
+    }).render('#paypal-button-container');
+  </script>
+  <!-- Footer -->
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 
 </html>
