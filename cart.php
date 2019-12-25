@@ -163,7 +163,7 @@ function checkout($product_id, $count){
                                             <td class="border-0 align-middle"><strong><?php echo number_format($price)." ₫"; ?></strong></td>
                                             <td class="border-0 align-middle"><strong><?php echo $count; ?></strong></td>
                                             <td class="border-0 align-middle"><strong><?php echo number_format($total)." ₫"; ?></strong></td>
-                                            <td class="align-middle"><a href="action.php?type=delete&name=<?php echo $name ?>" class="text-dark"><i class="fa fa-trash"></i></a></td>
+                                            <td  class="align-middle"><a href="action.php?type=delete&name=<?php echo $name ?>" class="text-dark"><i style="margin-left:30px" class="fa fa-trash"></i></a></td>
                                         </tr>
                                         <?php }} ?>
                                     </tbody>

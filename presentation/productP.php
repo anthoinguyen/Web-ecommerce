@@ -99,7 +99,7 @@ class ProductP
     $product_group = $cp->GetPages();
 
     $from = "2019-08-01";
-    $to = "2019-12-25";
+    $to = "2019-12-26";
     $pad = new ProductAnalysisB();
     $getview = $pad->GetView($id, $from, $to);
     $view = $getview ? $getview : 0;
@@ -134,6 +134,58 @@ class ProductP
         <h5 class="card-title" style="font-size:16px">{$name}</h5>
         <p class="card-text" style="color:red">{$price} <span style="font-size:17px">₫</span></p>
         <a href="action.php?type=addToCart&id={$id}&name={$name}&price={$price1}&image={$image}&category={$cat_id}&pages={$product_group}" class="btn btn-primary">Add to card</a>
+        <p class="card-text" style="display:inline; margin-left:40px;font-size:12px"> <i class="fas fa-eye" style="margin-right:3px"></i>{$view}</p>
+      </div>
+      </div>
+      <br>
+      </div>
+      DELIMITER;
+    }
+    echo $product;
+  }
+
+  public function ShowProductOfSearch($name, $price1, $id, $image, $new_price1)
+  {
+    $cp = new CategoryP();
+
+    $current_key = $this->GetKeyOfSearch();
+    $current_group = $this->GetPagesOfSearch();
+    $from = "2019-08-01";
+    $to = "2019-12-26";
+    $pad = new ProductAnalysisB();
+    $getview = $pad->GetView($id, $from, $to);
+    $view = $getview ? $getview : 0;
+    $price = number_format($price1);
+    if ($new_price1 != null) {
+      $new_price = number_format($new_price1);
+      $product = <<<DELIMITER
+      <div class="col-sm-4">
+      <div class="card">
+      <a href="item.php?product_id={$id}">
+      <img class="card-img-top" style="margin:5px 0" src="{$image}" alt="Card image cap">
+      </a>
+      <div class="card-body">
+        <h5 class="card-title" style="font-size:16px">{$name}</h5>
+        <p class="card-text" style="color:red; display:inline-block; margin-right:10px">{$new_price} <span style="font-size:17px">₫</span></p>
+        <p class="card-text" style="text-decoration:line-through; font-size:12px; margin-bottom:5px; display:inline-block">{$price} <span style="font-size: 15px">₫</span></p>
+        <a href="action.php?type=addToCart&id={$id}&name={$name}&price={$new_price1}&image={$image}&key={$current_key}&pages={$current_group}" class="btn btn-primary">Add to card</a>
+        <p class="card-text" style="display:inline; margin-left:40px;font-size:12px"> <i class="fas fa-eye" style="margin-right:3px"></i>{$view}</p>
+      </div>
+      </div>
+      <br>
+      </div>
+      DELIMITER;
+    } else {
+      $product = <<<DELIMITER
+      <div class="col-sm-4">
+      <div class="card">
+      <a href="item.php?product_id={$id}">
+      <img class="card-img-top" style="margin:5px 0" src="{$image}" alt="Card image cap">
+      </a>
+      <div class="card-body">
+        <h5 class="card-title" style="font-size:16px">{$name}</h5>
+        <p class="card-text" style="color:red">{$price} <span style="font-size:17px">₫</span></p>
+        <a href="action.php?type=addToCart&id={$id}&name={$name}&price={$price1}&image={$image}&key={$current_key}&pages={$current_group}" class="btn btn-primary">Add to card</a>
         <p class="card-text" style="display:inline; margin-left:40px;font-size:12px"> <i class="fas fa-eye" style="margin-right:3px"></i>{$view}</p>
       </div>
       </div>
@@ -297,7 +349,7 @@ class ProductP
       return;
     }
     while ($row = mysqli_fetch_array($result)) {
-      $this->ShowProduct($row['product_name'], $row['product_price'], $row['product_id'], $row['product_image'], $row['new_price']);
+      $this->ShowProductOfSearch($row['product_name'], $row['product_price'], $row['product_id'], $row['product_image'], $row['new_price']);
     }
   }
 }
