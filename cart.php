@@ -1,3 +1,4 @@
+<?php include "data/database.php" ?>
 <?php
 if (isset($_POST['search'])) {
     $key = $_POST['key'];
@@ -12,6 +13,19 @@ function convertCurrency($amount, $from, $to){
     $converted = preg_replace("/[^0-9.]/", "", $converted[1]);
     return number_format(round($converted, 3),2);
 }
+
+function checkout($product_id, $count){
+    $sql = "SELECT inventory_management.in_stock FROM `inventory_in` INNER JOIN inventory_management ON inventory_management.inventory_id = inventory_in.inventory_id WHERE inventory_in.product_id={$product_id} ORDER BY inventory_management.update_date DESC LIMIT 1";
+    $db = new Database();
+    $result = $db->select($sql);
+    while ($row = mysqli_fetch_array($result)) {
+        if($row['in_stock'] < $count){
+            return "Out of stock";
+        }
+    }
+    return $count;
+}
+
 ?>
 <!DOCTYPE html>
 <?php session_start(); ?>
@@ -111,19 +125,30 @@ function convertCurrency($amount, $from, $to){
                                             <th scope="col" class="border-0 bg-light">
                                                 <div class="py-2 text-uppercase">Total</div>
                                             </th>
+                                            <th scope="col" class="border-0 bg-light">
+                                                <div class="py-2 text-uppercase">Remove</div>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php 
                                             $totalOrder = 0;
-                                            $session_name = array_keys($_SESSION['cart']);
-                                            for($i = 0; $i < count($_SESSION['cart']); $i++){
-                                                $name = $_SESSION['cart'][$session_name[$i]]['product_name'];
-                                                $image = $_SESSION['cart'][$session_name[$i]]['product_image'];
-                                                $count = $_SESSION['cart'][$session_name[$i]]['count'];
-                                                $price = $_SESSION['cart'][$session_name[$i]]['product_price'];
-                                                $total = $price*$count;
-                                                $totalOrder += $total;
+                                            if(isset($_SESSION['cart']) > 0){
+                                                $session_name = array_keys($_SESSION['cart']); 
+                                                for($i = 0; $i < count($_SESSION['cart']); $i++){
+                                                    $id = $_SESSION['cart'][$session_name[$i]]['product_id'];
+                                                    $name = $_SESSION['cart'][$session_name[$i]]['product_name'];
+                                                    $image = $_SESSION['cart'][$session_name[$i]]['product_image'];
+                                                    $price = $_SESSION['cart'][$session_name[$i]]['product_price'];
+                                                    $count1 = $_SESSION['cart'][$session_name[$i]]['count'];
+                                                    $count = checkout($id, $count1);
+                                                    if($count == "Out of stock"){
+                                                        $total = 0;
+                                                    }else{
+                                                        $total = $price*$count;
+                                                    }
+                                                    
+                                                    $totalOrder += $total;
                                         ?>
                                         <tr>
                                             <th scope="row" class="border-0">
@@ -137,8 +162,9 @@ function convertCurrency($amount, $from, $to){
                                             <td class="border-0 align-middle"><strong><?php echo number_format($price)." ₫"; ?></strong></td>
                                             <td class="border-0 align-middle"><strong><?php echo $count; ?></strong></td>
                                             <td class="border-0 align-middle"><strong><?php echo number_format($total)." ₫"; ?></strong></td>
+                                            <td class="align-middle"><a href="action.php?type=delete&name=<?php echo $name ?>" class="text-dark"><i class="fa fa-trash"></i></a></td>
                                         </tr>
-                                        <?php } ?>
+                                        <?php }} ?>
                                     </tbody>
                                 </table>
                             </div>

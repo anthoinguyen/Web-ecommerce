@@ -9,15 +9,24 @@
 			$price = $_GET['price'];
 			$image = $_GET['image'];
         	$card->AddToCard($id, $name, $price, $image);
-		}
-		if(isset($_GET['category'])){
+        	if(isset($_GET['category'])){
 			$category = $_GET['category'];
 			$pages = $_GET['pages'];
 			 header("Location: index.php?category={$category}&pages={$pages}");
-		}else{
-			$id = $_GET['id'];
-			header("Location: item.php?product_id={$id}");
+			}else{
+				$id = $_GET['id'];
+				header("Location: item.php?product_id={$id}");
+			}
+			exit();
 		}
-		exit();
+		if($_GET['type'] == 'delete'){
+			$name = $_GET['name'];
+			$session_name = "name".$name;
+			unset($_SESSION['cart'][$session_name]);
+			
+			header("Location: cart.php");
+			exit();
+		}
+		
 	}
 ?>
