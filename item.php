@@ -30,7 +30,7 @@ if (isset($_POST['search'])) {
 <body style="font-family: 'Roboto', sans-serif;">
   <!-- Navbar -->
   <div class="navbar navbar-expand-lg navbar-light bg-light" style="margin-bottom:15px">
-    <a class="navbar-brand" href="#">Group P2T2H</a>
+  <a class="navbar-brand" href="index.php">Group P2T2H</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
